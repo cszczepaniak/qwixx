@@ -53,7 +53,7 @@
 	let disabledIndices = $derived(crosses.map((c) => c.lastIndexOf(true)));
 </script>
 
-<div class="flex h-screen flex-row items-center justify-around shadow-sm">
+<div class="mt-4 flex h-screen flex-row justify-around shadow-sm md:mt-0 md:items-center">
 	<div class="flex flex-col">
 		<div class="flex flex-row space-x-0.5 md:flex-col md:space-y-0.5">
 			{#each rows as row, rowIdx}
