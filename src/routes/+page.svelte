@@ -70,7 +70,7 @@
 					<div class={clsx("mx-auto w-max px-3 py-2", colors[rowIdx].mg)}>
 						<div
 							class={clsx(
-								"flex flex-col items-center space-y-0.5 rounded-md p-0.5 md:flex-row md:space-x-0.5",
+								"flex flex-col items-center space-y-0.5 rounded-md p-0.5 md:flex-row md:space-x-0.5 md:space-y-0",
 								colors[rowIdx].fg,
 							)}
 						>
