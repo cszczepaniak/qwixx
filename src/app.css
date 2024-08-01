@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.something {
+background-image:
+    repeating-linear-gradient(
+		-45deg,
+		rgba(0, 0, 0, 0),
+		rgba(0, 0, 0, 0) 5px,
+		rgba(0, 0, 0, 0.5) 5px,
+		rgba(0, 0, 0, 0.5) 6px
+    );
+	background-size: 8px 8px, 8px 8px;
+}
