@@ -54,99 +54,100 @@
 </script>
 
 <div class="flex h-screen flex-row items-center justify-around shadow-sm">
-	<div class="flex flex-col space-y-0.5">
-		{#each rows as row, rowIdx}
-			<div class="relative">
-				{#if !unlockedLocks[rowIdx]}
-					<div
-						class="something translate diagonal-stripe-1 absolute z-10 h-[3.75rem]
-					w-[7rem] translate-x-[32.25rem] translate-y-[0.25rem] rounded-md border-2 border-dashed border-gray-800"
-						transition:fade={{ delay: 250, duration: 300 }}
-					></div>
-				{/if}
-				<div class={clsx("mx-auto w-max px-3 py-2", colors[rowIdx].mg)}>
-					<div
-						class={clsx(
-							"flex flex-row items-center space-x-0.5 rounded-md p-0.5",
-							colors[rowIdx].fg,
-						)}
-					>
-						{#each row as col, colIdx}
-							<div class="relative">
-								{#if crosses[rowIdx][colIdx]}
-									<button
-										class="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform"
-										onclick={() => {
-											rowColToConfirm = [rowIdx, colIdx];
-											confirmClearCrossDialog.showModal();
-										}}
-									>
-										{@render xIcon("size-12")}
-									</button>
-								{/if}
-								<button
-									onclick={() => (crosses[rowIdx][colIdx] = true)}
-									disabled={colIdx <= disabledIndices[rowIdx]}
-									class={clsx(
-										"flex h-12 w-12 items-center justify-around rounded-md p-2 text-center text-2xl font-bold",
-										colors[rowIdx].bg,
-										colors[rowIdx].text,
-										// The 10th index is either 2 or 12, and it's where we
-										// separate the lock from the rest of the squares.
-										colIdx === 10 && "ml-2",
-									)}
-								>
-									{#if col === "LOCK"}
-										{@render lockIcon()}
-									{:else}
-										{col}
+	<div class="flex flex-col">
+		<div class="flex flex-row space-x-0.5 md:flex-col md:space-y-0.5">
+			{#each rows as row, rowIdx}
+				<div class="relative">
+					{#if !unlockedLocks[rowIdx]}
+						<div
+							class="something translate diagonal-stripe-1 absolute z-10 h-[7rem]
+							w-[3.75rem] translate-x-[0.5rem]
+					translate-y-[32rem] rounded-md border-2
+							border-dashed border-gray-800 md:h-[3.75rem] md:w-[7rem] md:translate-x-[32.25rem] md:translate-y-[0.25rem]"
+							transition:fade={{ delay: 250, duration: 300 }}
+						></div>
+					{/if}
+					<div class={clsx("mx-auto w-max px-3 py-2", colors[rowIdx].mg)}>
+						<div
+							class={clsx(
+								"flex flex-col items-center space-y-0.5 rounded-md p-0.5 md:flex-row md:space-x-0.5",
+								colors[rowIdx].fg,
+							)}
+						>
+							{#each row as col, colIdx}
+								<div class="relative">
+									{#if crosses[rowIdx][colIdx]}
+										<button
+											class="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform"
+											onclick={() => {
+												rowColToConfirm = [rowIdx, colIdx];
+												confirmClearCrossDialog.showModal();
+											}}
+										>
+											{@render xIcon("size-12")}
+										</button>
 									{/if}
-								</button>
-							</div>
-						{/each}
+									<button
+										onclick={() => (crosses[rowIdx][colIdx] = true)}
+										disabled={colIdx <= disabledIndices[rowIdx]}
+										class={clsx(
+											"flex h-12 w-12 items-center justify-around rounded-md p-2 text-center text-2xl font-bold",
+											colors[rowIdx].bg,
+											colors[rowIdx].text,
+											// The 10th index is either 2 or 12, and it's where we
+											// separate the lock from the rest of the squares.
+											colIdx === 10 && "mt-2 md:ml-2 md:mt-0",
+										)}
+									>
+										{#if col === "LOCK"}
+											{@render lockIcon()}
+										{:else}
+											{col}
+										{/if}
+									</button>
+								</div>
+							{/each}
+						</div>
 					</div>
+				</div>
+			{/each}
+		</div>
+		<div class="mt-2 flex flex-col justify-between space-y-4 md:flex-row-reverse md:space-y-0">
+			<div class="flex flex-col items-end space-y-2">
+				<p class="font-medium italic">Missed Rolls (-5 pts)</p>
+				<div class="flex flex-row space-x-2">
+					{#each missedRolls as missed, i}
+						<div class="relative">
+							{#if missed}
+								<button
+									class="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 transform"
+									onclick={() => (missedRolls[i] = false)}
+								>
+									{@render xIcon("size-6")}
+								</button>
+							{/if}
+							<button
+								onclick={() => (missedRolls[i] = true)}
+								class="flex h-6 w-6 items-center justify-around rounded-md border
+							border-gray-800 bg-gray-100 p-2 text-center text-2xl font-bold"
+							></button>
+						</div>
+					{/each}
 				</div>
 			</div>
-		{/each}
-
-		<div>
-			<div class="mt-2 flex flex-row justify-between">
-				<div class="flex flex-row space-x-2">
-					<button
-						onclick={() => scoreDialog.showModal()}
-						class="rounded-md border border-gray-800 px-4 py-2"
-					>
-						Show Score
-					</button>
-					<button
-						onclick={() => confirmClearAllDialog.showModal()}
-						class="rounded-md border border-gray-800 px-4 py-2"
-					>
-						Clear Scorecard
-					</button>
-				</div>
-				<div class="flex flex-col items-end space-y-2">
-					<p class="font-medium italic">Missed Rolls (-5 pts)</p>
-					<div class="flex flex-row space-x-2">
-						{#each missedRolls as missed, i}
-							<div class="relative">
-								{#if missed}
-									<button
-										class="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 transform"
-										onclick={() => (missedRolls[i] = false)}
-									>
-										{@render xIcon("size-6")}
-									</button>
-								{/if}
-								<button
-									onclick={() => (missedRolls[i] = true)}
-									class="flex h-6 w-6 items-center justify-around rounded-md border
-							border-gray-800 bg-gray-100 p-2 text-center text-2xl font-bold"
-								></button>
-							</div>
-						{/each}
-					</div>
-				</div>
+			<div class="flex flex-row justify-between space-x-2">
+				<button
+					onclick={() => confirmClearAllDialog.showModal()}
+					class="rounded-md border border-gray-800 px-4 py-2"
+				>
+					Clear Scorecard
+				</button>
+				<button
+					onclick={() => scoreDialog.showModal()}
+					class="rounded-md border border-gray-800 px-4 py-2"
+				>
+					Show Score
+				</button>
 			</div>
 		</div>
 	</div>
