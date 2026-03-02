@@ -18,10 +18,13 @@ import (
 //go:embed static/*
 var staticFS embed.FS
 
+//go:embed static/favicon.png
+var favicon embed.FS
+
 // responseRecorder wraps ResponseWriter to detect if a response was written.
 type responseRecorder struct {
 	http.ResponseWriter
-	status int
+	status  int
 	written bool
 }
 
@@ -67,6 +70,10 @@ func main() {
 	mux.Handle("/static/", staticHandler)
 	// Use "/" + checks instead of "GET /": Go 1.26 ServeMux rejects "GET /" when "/static/" is registered (pattern conflict).
 	mux.HandleFunc("/", adapt(func(w http.ResponseWriter, r *http.Request) error {
+		if r.URL.Path == "/favicon.ico" {
+			http.ServeFileFS(w, r, favicon, "static/favicon.png")
+			return nil
+		}
 		if r.URL.Path != "/" {
 			http.NotFound(w, r)
 			return nil
