@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tell v4 where to find class names (replaces content paths from old tailwind.config.js) */
+@source "../../../internal";
+@source "../../";
 
 .something {
   background-image:
