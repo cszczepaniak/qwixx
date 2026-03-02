@@ -6,7 +6,7 @@ templ:
 
 # Build Tailwind CSS into embedded static dir
 tailwind:
-	npx tailwindcss -c tailwind.config.js -i cmd/qwixx/static/input.css -o cmd/qwixx/static/dist.css
+	tailwindcss -c tailwind.config.js -i cmd/qwixx/static/input.css -o cmd/qwixx/static/dist.css
 
 format:
 	go tool templ fmt .
