@@ -24,7 +24,7 @@ type Signals struct {
 
 // PopulateDerived fills DisabledIndices, UnlockedLocks, and Score from the current Game state.
 func (s *Signals) PopulateDerived() {
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		s.DisabledIndices[i] = s.Game.DisabledIndex(i)
 		s.UnlockedLocks[i] = s.Game.UnlockedLock(i)
 	}

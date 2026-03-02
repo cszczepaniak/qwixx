@@ -2,8 +2,8 @@ package game
 
 // State is the full Qwixx scorecard state sent to/from the client.
 type State struct {
-	Crosses    [4][12]bool `json:"crosses"`
-	MissedRolls [4]bool    `json:"missedRolls"`
+	Crosses     [4][12]bool `json:"crosses"`
+	MissedRolls [4]bool     `json:"missedRolls"`
 }
 
 // ScoresByXCount maps number of crosses in a row to points (0..12).
@@ -23,7 +23,7 @@ func CountCrossesInRow(row [12]bool) int {
 // Score computes total score from crosses and missed rolls.
 func (s *State) Score() int {
 	score := 0
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		score += ScoresByXCount[CountCrossesInRow(s.Crosses[i])]
 	}
 	missed := 0
@@ -81,8 +81,8 @@ func (s *State) UnsetMissed(i int) {
 
 // ClearAll resets the entire scorecard.
 func (s *State) ClearAll() {
-	for i := 0; i < 4; i++ {
-		for j := 0; j < 12; j++ {
+	for i := range 4 {
+		for j := range 12 {
 			s.Crosses[i][j] = false
 		}
 		s.MissedRolls[i] = false
