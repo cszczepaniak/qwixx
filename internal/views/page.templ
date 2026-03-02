@@ -14,8 +14,7 @@ templ Page(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initia
 		data-signals:confirm-clear-all="false"
 		data-signals:show-score="false"
 		data-init="(function(){ var s = localStorage.getItem('qwixx'); if(s){ try { var d = JSON.parse(s); if(d && d.game){ $game = d.game; if(d.disabledIndices) $disabledIndices = d.disabledIndices; if(d.unlockedLocks) $unlockedLocks = d.unlockedLocks; if(d.score !== undefined) $score = d.score; } } catch(e){} } })()"
-		data-on-signal-patch="if(patch && (patch.path === 'game' || patch.path === 'disabledIndices' || patch.path === 'unlockedLocks' || patch.path === 'score')) { localStorage.setItem('qwixx', JSON.stringify({ game: $game, disabledIndices: $disabledIndices, unlockedLocks: $unlockedLocks, score: $score })); }"
-		data-on-signal-patch-filter="{ include: /^(game|disabledIndices|unlockedLocks|score)$/ }"
+		data-effect="localStorage.setItem('qwixx', JSON.stringify({ game: $game, disabledIndices: $disabledIndices, unlockedLocks: $unlockedLocks, score: $score }))"
 	>
 		<div class="flex flex-col">
 			<div class="flex flex-row space-x-0.5 md:flex-col md:space-y-0.5">
