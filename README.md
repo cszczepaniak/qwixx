@@ -33,8 +33,8 @@ So the app survives server restarts and client refreshes because the single sour
 - `pnpm run generate` — same as `make generate` (uses pnpm)
 
 **Build and run the server:**
-- `make build` — regenerate assets, then `go build -o qwixx ./cmd/qwixx`
-- `make run` — regenerate assets, then `go run ./cmd/qwixx`
+- `make build` — regenerate assets, then `go build -o qwixx .`
+- `make run` — regenerate assets, then `go run .`
 - Or manually: `go build ./cmd/qwixx && ./qwixx` (after `make generate`)
 
 4. Open **http://localhost:3000**

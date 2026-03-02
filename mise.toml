@@ -8,7 +8,7 @@ run = "go tool templ generate"
 
 [tasks.tailwind]
 description = "Build Tailwind CSS into embedded static dir"
-run = "tailwindcss -i cmd/qwixx/static/input.css -o cmd/qwixx/static/dist.css"
+run = "tailwindcss -i static/input.css -o static/dist.css"
 
 [tasks.format]
 description = "Format .templ files"
@@ -22,21 +22,21 @@ run = ""
 [tasks.build]
 description = "Build the Go server binary"
 depends = ["generate"]
-run = "go build -o qwixx ./cmd/qwixx"
+run = "go build -o qwixx ."
 
 [tasks.run]
 description = "Run the Go server (builds assets first)"
 depends = ["generate"]
-run = "go run ./cmd/qwixx"
+run = "go run ."
 
 [tasks.dev]
 description = "Run templ and tailwind in watch mode with browser hot reload via proxy on :7331 (Ctrl+C stops all)"
 run = """
 trap 'kill 0; exit' INT TERM
 go tool templ generate \
-	-cmd "go run cmd/qwixx/main.go" \
+	-cmd "go run main.go" \
 	-watch \
 	-proxy http://127.0.0.1:3000 &
-tailwindcss -i cmd/qwixx/static/input.css -o cmd/qwixx/static/dist.css --watch &
+tailwindcss -i static/input.css -o static/dist.css --watch &
 wait
 """
