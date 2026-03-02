@@ -65,7 +65,7 @@ templ Row(rowIdx int) {
 		></div>
 		<div class={ RowMarginClass(rowIdx) }>
 			<div class={ RowInnerClass(rowIdx) }>
-				for colIdx := 0; colIdx < 12; colIdx++ {
+				for colIdx := range 12 {
 					@Cell(rowIdx, colIdx)
 				}
 			</div>
