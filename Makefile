@@ -2,14 +2,17 @@
 
 # Regenerate Go code from .templ files
 templ:
-	templ generate
+	go tool templ generate
 
 # Build Tailwind CSS into embedded static dir
 tailwind:
 	npx tailwindcss -c tailwind.server.config.js -i cmd/qwixx/static/input.css -o cmd/qwixx/static/dist.css
 
+format:
+	go tool templ fmt .
+
 # Regenerate templ and tailwind (run before building the Go server)
-generate: templ tailwind
+generate: templ tailwind format
 
 # Build the Go server binary
 build: generate

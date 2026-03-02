@@ -1,7 +1,9 @@
 package views
 
 templ Page(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initialScore string) {
-	<div class="mt-4 flex h-screen flex-row justify-around shadow-sm md:mt-0 md:items-center" id="app"
+	<div
+		class="mt-4 flex h-screen flex-row justify-around shadow-sm md:mt-0 md:items-center"
+		id="app"
 		data-signals:game={ initialGameJSON }
 		data-signals:disabled-indices={ initialDisabledIndices }
 		data-signals:unlocked-locks={ initialUnlockedLocks }
@@ -17,7 +19,7 @@ templ Page(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initia
 	>
 		<div class="flex flex-col">
 			<div class="flex flex-row space-x-0.5 md:flex-col md:space-y-0.5">
-				for rowIdx := 0; rowIdx < 4; rowIdx++ {
+				for rowIdx := range 4 {
 					@Row(rowIdx)
 				}
 			</div>
@@ -25,7 +27,7 @@ templ Page(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initia
 				<div class="flex flex-col items-end space-y-2">
 					<p class="font-medium italic">Missed Rolls (-5 pts)</p>
 					<div class="flex flex-row space-x-2">
-						for i := 0; i < 4; i++ {
+						for i := range 4 {
 							@MissedSlot(i)
 						}
 					</div>
@@ -200,7 +202,7 @@ templ XIcon(size string) {
 		stroke="currentColor"
 		class={ size }
 	>
-		<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+		<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
 	</svg>
 }
 
@@ -217,6 +219,6 @@ templ LockIcon() {
 			stroke-linecap="round"
 			stroke-linejoin="round"
 			d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
-		/>
+		></path>
 	</svg>
 }
