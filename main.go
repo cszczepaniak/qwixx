@@ -36,6 +36,13 @@ func (r *responseRecorder) WriteHeader(code int) {
 	}
 }
 
+func (r *responseRecorder) Flush() {
+	f, ok := r.ResponseWriter.(http.Flusher)
+	if ok {
+		f.Flush()
+	}
+}
+
 // adapt converts a handler that returns an error into http.HandlerFunc.
 // It logs errors with slog and sends an appropriate status if the handler didn't write a response.
 func adapt(h handlers.HandlerFunc) http.HandlerFunc {
