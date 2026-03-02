@@ -142,7 +142,7 @@ func Row(rowIdx int) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"relative\"><div class=\"something translate diagonal-stripe-1 absolute z-10 h-28 w-15 translate-x-2 translate-y-128 rounded-md border-2 border-dashed border-gray-800 md:h-15 md:w-28 md:translate-x-129 md:translate-y-1\" data-show=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"relative\"><div class=\"hide-lock-background translate diagonal-stripe-1 absolute z-10 h-28 w-15 translate-x-2 translate-y-128 rounded-md border-2 border-dashed border-gray-800 md:h-15 md:w-28 md:translate-x-129 md:translate-y-1\" data-show=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

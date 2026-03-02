@@ -4,7 +4,7 @@
 @source "../../../internal";
 @source "../../";
 
-.something {
+.hide-lock-background {
   background-image:
     repeating-linear-gradient(
       -45deg,
