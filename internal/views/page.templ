@@ -1,0 +1,222 @@
+package views
+
+templ Page(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initialScore string) {
+	<div class="mt-4 flex h-screen flex-row justify-around shadow-sm md:mt-0 md:items-center" id="app"
+		data-signals:game={ initialGameJSON }
+		data-signals:disabled-indices={ initialDisabledIndices }
+		data-signals:unlocked-locks={ initialUnlockedLocks }
+		data-signals:score={ initialScore }
+		data-signals:confirm-row="-1"
+		data-signals:confirm-col="-1"
+		data-signals:show-confirm-clear-cross="false"
+		data-signals:confirm-clear-all="false"
+		data-signals:show-score="false"
+		data-init="(function(){ var s = localStorage.getItem('qwixx'); if(s){ try { var d = JSON.parse(s); if(d && d.game){ $game = d.game; if(d.disabledIndices) $disabledIndices = d.disabledIndices; if(d.unlockedLocks) $unlockedLocks = d.unlockedLocks; if(d.score !== undefined) $score = d.score; } } catch(e){} } })()"
+		data-on-signal-patch="if(patch && (patch.path === 'game' || patch.path === 'disabledIndices' || patch.path === 'unlockedLocks' || patch.path === 'score')) { localStorage.setItem('qwixx', JSON.stringify({ game: $game, disabledIndices: $disabledIndices, unlockedLocks: $unlockedLocks, score: $score })); }"
+		data-on-signal-patch-filter="{ include: /^(game|disabledIndices|unlockedLocks|score)$/ }"
+	>
+		<div class="flex flex-col">
+			<div class="flex flex-row space-x-0.5 md:flex-col md:space-y-0.5">
+				for rowIdx := 0; rowIdx < 4; rowIdx++ {
+					@Row(rowIdx)
+				}
+			</div>
+			<div class="mt-2 flex flex-col justify-between space-y-4 md:flex-row-reverse md:space-y-0">
+				<div class="flex flex-col items-end space-y-2">
+					<p class="font-medium italic">Missed Rolls (-5 pts)</p>
+					<div class="flex flex-row space-x-2">
+						for i := 0; i < 4; i++ {
+							@MissedSlot(i)
+						}
+					</div>
+				</div>
+				<div class="flex flex-row justify-between space-x-2">
+					<button
+						type="button"
+						class="rounded-md border border-gray-800 px-4 py-2"
+						data-on:click="$confirmClearAll = true"
+					>
+						Clear Scorecard
+					</button>
+					<button
+						type="button"
+						class="rounded-md border border-gray-800 px-4 py-2"
+						data-on:click="$showScore = true"
+					>
+						Show Score
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	@ConfirmClearCrossDialog()
+	@ConfirmClearAllDialog()
+	@ScoreDialog()
+}
+
+templ Row(rowIdx int) {
+	<div class="relative">
+		<div
+			class="something translate diagonal-stripe-1 absolute z-10 h-[7rem] w-[3.75rem] translate-x-[0.5rem] translate-y-[32rem] rounded-md border-2 border-dashed border-gray-800 md:h-[3.75rem] md:w-[7rem] md:translate-x-[32.25rem] md:translate-y-[0.25rem]"
+			data-show={ LockStripeShowExpr(rowIdx) }
+			style="display: none"
+		></div>
+		<div class={ RowMarginClass(rowIdx) }>
+			<div class={ RowInnerClass(rowIdx) }>
+				for colIdx := 0; colIdx < 12; colIdx++ {
+					@Cell(rowIdx, colIdx)
+				}
+			</div>
+		</div>
+	</div>
+}
+
+templ Cell(rowIdx, colIdx int) {
+	<div class="relative">
+		<button
+			type="button"
+			class="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform"
+			data-show={ CrossShowExpr(rowIdx, colIdx) }
+			data-on:click={ ConfirmCrossClickExpr(rowIdx, colIdx) }
+			style="display: none"
+		>
+			@XIcon("size-12")
+		</button>
+		<button
+			type="button"
+			class={ CellClass(rowIdx, colIdx) }
+			data-attr:disabled={ DisabledExpr(rowIdx, colIdx) }
+			data-on:click={ SetCrossURL(rowIdx, colIdx) }
+		>
+			if colIdx == 11 {
+				@LockIcon()
+			} else {
+				{ CellLabel(rowIdx, colIdx) }
+			}
+		</button>
+	</div>
+}
+
+templ MissedSlot(i int) {
+	<div class="relative">
+		<button
+			type="button"
+			class="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 transform"
+			data-show={ MissedShowExpr(i) }
+			data-on:click={ UnsetMissedURL(i) }
+			style="display: none"
+		>
+			@XIcon("size-6")
+		</button>
+		<button
+			type="button"
+			class="flex h-6 w-6 items-center justify-around rounded-md border border-gray-800 bg-gray-100 p-2 text-center text-2xl font-bold"
+			data-on:click={ SetMissedURL(i) }
+		></button>
+	</div>
+}
+
+templ ConfirmClearCrossDialog() {
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center rounded-md bg-black/50 p-6"
+		data-show="$showConfirmClearCross"
+		style="display: none"
+	>
+		<div class="space-y-6 rounded-md bg-white p-6 shadow-lg">
+			<p class="font-medium">Really clear this cross?</p>
+			<div class="flex flex-row justify-between space-x-2">
+				<button
+					type="button"
+					class="rounded-md border px-4 py-2"
+					data-on:click={ UnsetCrossConfirmURL() }
+				>
+					Confirm
+				</button>
+				<button
+					type="button"
+					class="rounded-md border px-4 py-2"
+					data-on:click="$showConfirmClearCross = false; $confirmRow = -1; $confirmCol = -1"
+				>
+					Cancel
+				</button>
+			</div>
+		</div>
+	</div>
+}
+
+templ ConfirmClearAllDialog() {
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center rounded-md bg-black/50 p-6"
+		data-show="$confirmClearAll"
+		style="display: none"
+	>
+		<div class="space-y-6 rounded-md bg-white p-6 shadow-lg">
+			<p class="font-medium">Really clear the entire scorecard?</p>
+			<div class="flex flex-row justify-between space-x-2">
+				<button
+					type="button"
+					class="rounded-md border px-4 py-2"
+					data-on:click={ ClearAllConfirmURL() }
+				>
+					Confirm
+				</button>
+				<button
+					type="button"
+					class="rounded-md border px-4 py-2"
+					data-on:click="$confirmClearAll = false"
+				>
+					Cancel
+				</button>
+			</div>
+		</div>
+	</div>
+}
+
+templ ScoreDialog() {
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center rounded-md bg-black/50 p-6"
+		data-show="$showScore"
+		style="display: none"
+	>
+		<div class="rounded-md bg-white shadow-lg">
+			<div class="flex flex-row justify-end pr-2 pt-2">
+				<button type="button" class="rounded p-1" data-on:click="$showScore = false">
+					@XIcon("size-6")
+				</button>
+			</div>
+			<p class="p-6 text-2xl" data-text="'Your score is: ' + $score">
+				Your score is: 0
+			</p>
+		</div>
+	</div>
+}
+
+templ XIcon(size string) {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke-width="1"
+		stroke="currentColor"
+		class={ size }
+	>
+		<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+	</svg>
+}
+
+templ LockIcon() {
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		fill="none"
+		viewBox="0 0 24 24"
+		stroke-width="1.5"
+		stroke="currentColor"
+		class="size-6"
+	>
+		<path
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+		/>
+	</svg>
+}

@@ -3,6 +3,9 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
+		"generate:templ": "templ generate",
+		"generate:tailwind": "npx tailwindcss -c tailwind.server.config.js -i cmd/qwixx/static/input.css -o cmd/qwixx/static/dist.css",
+		"generate": "pnpm run generate:templ && pnpm run generate:tailwind",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",

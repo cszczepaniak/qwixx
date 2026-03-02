@@ -1,0 +1,24 @@
+package views
+
+templ Layout() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<link rel="icon" href="/favicon.ico"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>Qwixx</title>
+			<link href="/static/dist.css" rel="stylesheet"/>
+			<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js"></script>
+		</head>
+		<body class="bg-gray-200">
+			{ children... }
+		</body>
+	</html>
+}
+
+templ Index(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initialScore string) {
+	@Layout() {
+		@Page(initialGameJSON, initialDisabledIndices, initialUnlockedLocks, initialScore)
+	}
+}
