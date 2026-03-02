@@ -115,6 +115,7 @@ func main() {
 
 	port := "3000"
 	if p := os.Getenv("PORT"); p != "" {
+		slog.Info("port overridden from env")
 		port = p
 	}
 	slog.Info("listening", "addr", "http://localhost:"+port)
